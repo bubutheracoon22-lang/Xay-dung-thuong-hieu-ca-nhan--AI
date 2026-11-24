@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURBO STUDIO PRO — Xưởng Video TikTok AI Đa Chủ Đề</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #070B14;
+            color: #F8FAFC;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .tab-active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(56, 189, 248, 0.14));
+            border-color: rgba(16, 185, 129, 0.55);
+            color: #6EE7B7;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+
+    <!-- THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
+    <header class="sticky top-0 z-40 bg-[#090E1A]/95 backdrop-blur-md border-b border-slate-800/90">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Logo & Thương hiệu -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-sky-600 flex items-center justify-center shadow-lg shadow-emerald-950/60 shrink-0">
+                    <i data-lucide="clapperboard" class="w-5 h-5 text-slate-950"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm sm:text-base font-black tracking-tight text-white">TURBO STUDIO PRO</h1>
+                        <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-extrabold text-emerald-300 uppercase">Chiến Lược Giữ Chân</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">20 Ý Tưởng 12 Tiêu Chí • Kịch Bản ≥ 3 Chuyển Cảnh • Auto-Edit 9:16</p>
+                </div>
+            </div>
+
+            <!-- Quản lý Hồ sơ Kênh & API Key -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 rounded-xl px-2.5 py-1.5">
+                    <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                    <select id="channel-select" onchange="onSelectChannel(this.value)" class="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none max-w-[170px] sm:max-w-[210px]">
+                        <option value="general" class="bg-slate-900">Đa chủ đề tự do (Mở)</option>
+                    </select>
+                    <button onclick="openNewChannelModal()" class="px-2 py-1 rounded-lg bg-violet-600/25 hover:bg-violet-600/40 border border-violet-500/40 text-[11px] font-bold text-violet-200 transition">
+                        + Tạo kênh
+                    </button>
+                    <button id="btn-delete-channel" onclick="openDeleteChannelModal()" class="hidden px-2 py-1 rounded-lg bg-rose-600/20 hover:bg-rose-600/35 border border-rose-500/40 text-[11px] font-bold text-rose-300 transition">
+                        Xóa kênh
+                    </button>
+                </div>
+
+                <button onclick="openApiModal()" id="api-status-btn" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-2 transition">
+                    <span id="api-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span id="api-status-text">Cài đặt API Key</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Thanh Tab Chính -->
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 pb-2.5 flex items-center gap-2 overflow-x-auto">
+            <button onclick="switchTab('ideas')" id="tab-btn-ideas" class="tab-active px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-bold flex items-center gap-2 whitespace-nowrap transition">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>1. Chiến Lược 20 Ý Tưởng & Kịch Bản</span>
+            </button>
+            <button onclick="switchTab('editor')" id="tab-btn-editor" class="px-3.5 py-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900 text-slate-300 text-xs font-bold flex items-center gap-2 whitespace-nowrap transition">
+                <i data-lucide="scissors" class="w-3.5 h-3.5 text-violet-400"></i>
+                <span>2. Tự Động Edit Video & Vietsub</span>
+            </button>
+            <button onclick="switchTab('vault')" id="tab-btn-vault" class="px-3.5 py-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900 text-slate-300 text-xs font-bold flex items-center gap-2 whitespace-nowrap transition">
+                <i data-lucide="folder-kanban" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>3. Kho Kịch Bản & Lịch Đăng</span>
+                <span id="vault-count-badge" class="px-1.5 py-0.2 rounded-md bg-slate-800 text-[10px] text-slate-300">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 space-y-6">
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: CHIẾN LƯỢC 20 Ý TƯỞNG 12 TIÊU CHÍ + XƯỞNG KỊCH BẢN & DEMO -->
+        <!-- ============================================================== -->
+        <section id="tab-ideas" class="space-y-6">
+
+            <!-- BẢNG THAM SỐ CHIẾN LƯỢC VIDEO NGẮN (TIKTOK & REELS) -->
+            <div class="rounded-2xl bg-[#0D1322] border border-slate-800/90 p-4 sm:p-6 shadow-xl">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="target" class="w-5 h-5 text-emerald-400"></i>
+                            <span>Chiến Lược 20 Ý Tưởng Giữ Chân Cao (TikTok & Reels • Chuẩn 12 Tiêu Chí)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Nhập ngách chủ đề, đối tượng người xem và mục tiêu tăng trưởng để xuất 20 ý tưởng chuẩn 12 mục kèm Top 5 ưu tiên làm trước.</p>
+                    </div>
+                    <button onclick="copyAll20IdeasReport()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-1.5 transition">
+                        <i data-lucide="copy" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>Copy trọn bộ 20 ý tưởng</span>
+                    </button>
+                </div>
+
+                <!-- 6 Tham số đầu vào -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 mb-1">1. Ngách chủ đề chính (TikTok / Reels):</label>
+                        <input id="strat-niche" type="text" placeholder="VD: Mèo con đi xe máy, Mẹo sửa nhà, Tài chính..." onkeydown="if(event.key==='Enter') fetchDailyIdeas(true)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white placeholder-slate-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 mb-1">2. Đối tượng người xem mục tiêu:</label>
+                        <input id="strat-audience" type="text" placeholder="VD: Người trẻ 18–35 tuổi, chủ nhà, dân văn phòng..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white placeholder-slate-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 mb-1">3. Mục tiêu tăng trưởng chính:</label>
+                        <select id="strat-goal" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white focus:outline-none">
+                            <option value="LƯỢT XEM 1M+ (Viral & Watch Time cao)">LƯỢT XEM 1M+ (Viral & Watch Time cao)</option>
+                            <option value="NGƯỜI THEO DÕI 200K+ (Xây kênh thương hiệu)">NGƯỜI THEO DÕI 200K+ (Xây kênh thương hiệu)</option>
+                            <option value="TƯƠNG TÁC CAO (Bình luận & Chia sẻ mạnh)">TƯƠNG TÁC CAO (Bình luận & Chia sẻ mạnh)</option>
+                            <option value="KHÁCH HÀNG TIỀM NĂNG & DOANH SỐ">KHÁCH HÀNG TIỀM NĂNG & DOANH SỐ</option>
+                            <option value="NHẬN DIỆN THƯƠNG HIỆU CÁ NHÂN">NHẬN DIỆN THƯƠNG HIỆU CÁ NHÂN</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 mb-1">4a. Độ dài video:</label>
+                            <select id="strat-length" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white focus:outline-none">
+                                <option value="15–30 GIÂY">15–30 GIÂY</option>
+                                <option value="30–60 GIÂY" selected>30–60 GIÂY</option>
+                                <option value="60–90 GIÂY">60–90 GIÂY</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 mb-1">4b. Phong cách:</label>
+                            <select id="strat-style" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white focus:outline-none">
+                                <option value="KỂ CHUYỆN">KỂ CHUYỆN</option>
+                                <option value="HƯỚNG DẪN">HƯỚNG DẪN</option>
+                                <option value="GIẢI TRÍ">GIẢI TRÍ</option>
+                                <option value="GIÁO DỤC">GIÁO DỤC</option>
+                                <option value="BÌNH LUẬN">BÌNH LUẬN</option>
+                                <option value="QUẢNG BÁ">QUẢNG BÁ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 mb-1">5. Lợi thế / Chuyên môn độc đáo của bạn:</label>
+                        <input id="strat-edge" type="text" placeholder="VD: Kinh nghiệm thực chiến, góc quay cận cảnh đẹp..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white placeholder-slate-500 focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 mb-1">6a. Chủ đề muốn tránh:</label>
+                            <input id="strat-avoid" type="text" placeholder="VD: Lý thuyết suông..." class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white placeholder-slate-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 mb-1">6b. CTA ưu tiên:</label>
+                            <select id="strat-cta" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs text-white focus:outline-none">
+                                <option value="BÌNH LUẬN">CTA: BÌNH LUẬN</option>
+                                <option value="LƯU VIDEO">CTA: LƯU VIDEO</option>
+                                <option value="CHIA SẺ">CTA: CHIA SẺ</option>
+                                <option value="THEO DÕI KÊNH">CTA: THEO DÕI KÊNH</option>
+                                <option value="NHẤP VÀO LINK">CTA: NHẤP VÀO LINK</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thanh phân loại Bản chất chủ đề & Nút tạo 20 ý tưởng -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/80">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="text-[11px] font-bold text-slate-400 mr-1">Bản chất chủ đề:</span>
+                        <button onclick="setTopicNature('auto')" id="nature-btn-auto" class="px-2.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-[11px] font-bold transition">Tự động phân tích</button>
+                        <button onclick="setTopicNature('entertainment')" id="nature-btn-entertainment" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition">Giải trí & Thú cưng</button>
+                        <button onclick="setTopicNature('intangible')" id="nature-btn-intangible" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition">Phi vật thể (Tâm lý)</button>
+                        <button onclick="setTopicNature('event')" id="nature-btn-event" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition">Sự kiện & Cột mốc</button>
+                        <button onclick="setTopicNature('career')" id="nature-btn-career" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition">Nghề nghiệp & Hậu trường</button>
+                        <button onclick="setTopicNature('howto')" id="nature-btn-howto" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition">Hướng dẫn quy trình</button>
+                    </div>
+                    <button id="btn-generate-20" onclick="fetchDailyIdeas(true)" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Tạo 20 Ý Tưởng Chiến Lược & Top 5 Ưu Tiên</span>
+                    </button>
+                </div>
+
+                <!-- Banner phân tích chủ đề -->
+                <div id="topic-analysis-banner" class="mt-4 p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <div class="text-xs font-extrabold text-emerald-300" id="topic-analysis-title">Đang sẵn sàng phân tích ngách chủ đề bất kỳ</div>
+                        <div class="text-[11px] text-slate-300 mt-0.5" id="topic-analysis-desc">Nhập từ khóa ở ô số 1 (VD: "mèo con đi xe máy", "hướng dẫn nấu trứng ốp Hàn Quốc", "mẹo sửa nhà"...) rồi bấm Tạo 20 Ý Tưởng.</div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">20 ý tưởng chuẩn 12 tiêu chí</span>
+                </div>
+
+                <!-- TOP 5 Ý TƯỞNG TỐT NHẤT NÊN LÀM ĐẦU TIÊN -->
+                <div class="mt-4 p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-slate-950 border border-amber-500/30">
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <h3 class="text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-2">
+                            <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i>
+                            <span>TOP 5 Ý TƯỞNG TỐT NHẤT NÊN LÀM ĐẦU TIÊN (TỐI ƯU GIỮ CHÂN & LAN TRUYỀN)</span>
+                        </h3>
+                        <span class="text-[11px] text-amber-200/70">Ưu tiên sản xuất tuần 1</span>
+                    </div>
+                    <div id="top5-ideas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5"></div>
+                </div>
+
+                <!-- LƯỚI 20 Ý TƯỞNG CHUẨN 12 TIÊU CHÍ -->
+                <div id="daily-ideas-grid" class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- XƯỞNG TRIỂN KHAI KỊCH BẢN CHI TIẾT + CÔNG TẮC GẠT EDIT/TEXT/SUB + ẢNH DEMO -->
+            <div id="workshop-box" class="rounded-2xl bg-[#0D1322] border border-slate-800/90 p-4 sm:p-6 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="film" class="w-5 h-5 text-violet-400"></i>
+                            <span>Xưởng Triển Khai Kịch Bản Chi Tiết & Prompt Chuyển Cảnh 9:16</span>
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Chuyển hóa ý tưởng thành 3 phương án kịch bản dày dặn (110–170 từ lời thoại), tối thiểu 4–6 phân cảnh liên hoàn và ảnh minh họa 9:16.</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <span class="text-[11px] font-bold text-slate-400 px-2">Thời lượng:</span>
+                        <button onclick="setDuration(20, 4)" id="dur-btn-20" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition">20s (4 cảnh)</button>
+                        <button onclick="setDuration(25, 4)" id="dur-btn-25" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition">25s (4 cảnh)</button>
+                        <button onclick="setDuration(30, 5)" id="dur-btn-30" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition">30s (5 cảnh)</button>
+                        <button onclick="setDuration(45, 6)" id="dur-btn-45" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition">45s (6 cảnh)</button>
+                    </div>
+                </div>
+
+                <!-- Thanh nạp nhanh 4 mẫu Prompt Quy trình chuẩn 5 lớp -->
+                <div class="mb-3 p-3 rounded-xl bg-slate-950/90 border border-slate-800">
+                    <div class="text-[11px] font-bold text-emerald-300 mb-2 flex items-center gap-1.5">
+                        <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+                        <span>Nạp nhanh mẫu Prompt Hướng dẫn quy trình (Chuẩn 5 lớp: Từng bước • Cận cảnh vật liệu • Ánh sáng bối cảnh • Nhân vật/Giọng dẫn • Nhạc nền):</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="applyHowToPromptTemplate(0)" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-semibold text-slate-200 transition">🍳 Nấu ăn: Trứng ốp kiểu Hàn (Bếp ấm áp & cận nguyên liệu)</button>
+                        <button onclick="applyHowToPromptTemplate(1)" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-semibold text-slate-200 transition">🐱 Dạy bé vẽ mèo con (Chi tiết từng nét & tô màu vui nhộn)</button>
+                        <button onclick="applyHowToPromptTemplate(2)" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-semibold text-slate-200 transition">🧘 Tập Yoga cơ bản (Công viên nắng chan hòa & đặc tả tư thế)</button>
+                        <button onclick="applyHowToPromptTemplate(3)" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-semibold text-slate-200 transition">👜 Làm túi handmade (Cận vật liệu len, móc từng bước & nhạc tươi)</button>
+                    </div>
+                </div>
+
+                <!-- Ô nhập nội dung ý tưởng cần triển khai -->
+                <textarea id="idea-input" rows="4" oninput="refreshPromptDemoPreview()" placeholder="Nhập ý tưởng video hoặc bấm 'Dựng Prompt' từ 1 trong 20 ý tưởng phía trên...&#10;VD: Tạo video hướng dẫn nấu ăn về cách làm món trứng ốp kiểu Hàn. Video gồm đầy đủ từng bước thực hiện, có cảnh quay cận cảnh rõ nét về các nguyên liệu đang được chế biến trong căn bếp ánh sáng ấm áp..." class="w-full p-4 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none leading-relaxed"></textarea>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-3">
+                    <button onclick="clearWorkshopInput()" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition">
+                        <i data-lucide="eraser" class="w-4 h-4"></i>
+                        <span>Xóa trắng ô nhập</span>
+                    </button>
+                    <button id="btn-generate-prompts" onclick="generateThreeActionPrompts()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Tạo 3 Kịch Bản Đa Góc Cạnh & Ảnh Demo 9:16</span>
+                    </button>
+                </div>
+
+                <!-- BẢNG CÔNG TẮC GẠT (EDIT VIDEO / TEXT / VIETSUB) & ẢNH DEMO TRỰC QUAN -->
+                <div class="mt-6 pt-6 border-t border-slate-800/90">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <div>
+                            <h4 class="text-sm font-extrabold text-white flex items-center gap-2">
+                                <i data-lucide="sliders" class="w-4 h-4 text-amber-400"></i>
+                                <span>Tùy Chọn Tính Năng (Edit Video • Text • Vietsub) & Ảnh Demo Prompt 9:16</span>
+                            </h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Gạt bật hoặc tắt từng công tắc bên dưới để chọn tính năng muốn dùng và xem trước ngay bố cục thực tế trên ảnh demo.</p>
+                        </div>
+                        <button onclick="generatePromptDemoPreview()" id="btn-render-prompt-demo" class="px-3.5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold flex items-center gap-1.5 transition">
+                            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                            <span>Tạo ảnh demo theo Prompt</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                        <!-- Cột trái: 3 Công tắc gạt hỏi nhu cầu sử dụng -->
+                        <div class="lg:col-span-7 space-y-3">
+                            <!-- Công tắc 1: Edit Video -->
+                            <label class="flex items-center justify-between gap-4 p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="scissors" class="w-4 h-4 text-emerald-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs sm:text-sm font-bold text-white">1. Bạn có cần sử dụng tính năng Auto-Edit Video không?</div>
+                                        <div class="text-[11px] text-slate-400 mt-0.5">Tự động ghép nối các cảnh từ Google Flow, cắt nhịp 1.15x và chỉnh màu điện ảnh 9:16.</div>
+                                    </div>
+                                </div>
+                                <div class="relative inline-flex items-center shrink-0">
+                                    <input type="checkbox" id="toggle-feature-edit" checked onchange="onFeatureToggleChange()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                                </div>
+                            </label>
+
+                            <!-- Công tắc 2: Text Hook trên video -->
+                            <label class="flex items-center justify-between gap-4 p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 hover:border-amber-500/40 cursor-pointer transition">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="type" class="w-4 h-4 text-amber-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs sm:text-sm font-bold text-white">2. Bạn có cần chèn Text Hook tiêu đề nổi bật không?</div>
+                                        <div class="text-[11px] text-slate-400 mt-0.5">Gắn chữ tiêu đề lớn 3 giây đầu ở phần trên khung hình để giữ chân người xem lướt TikTok.</div>
+                                    </div>
+                                </div>
+                                <div class="relative inline-flex items-center shrink-0">
+                                    <input type="checkbox" id="toggle-feature-text" checked onchange="onFeatureToggleChange()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:bg-amber-400 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                                </div>
+                            </label>
+
+                            <!-- Công tắc 3: Phụ đề Vietsub -->
+                            <label class="flex items-center justify-between gap-4 p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 hover:border-sky-500/40 cursor-pointer transition">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="captions" class="w-4 h-4 text-sky-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs sm:text-sm font-bold text-white">3. Bạn có cần chạy phụ đề Vietsub tự động không?</div>
+                                        <div class="text-[11px] text-slate-400 mt-0.5">Hiển thị phụ đề tiếng Việt chuẩn nhịp thoại ở vùng an toàn phía dưới màn hình.</div>
+                                    </div>
+                                </div>
+                                <div class="relative inline-flex items-center shrink-0">
+                                    <input type="checkbox" id="toggle-feature-sub" checked onchange="onFeatureToggleChange()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:bg-sky-400 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                                </div>
+                            </label>
+
+                            <!-- Tóm tắt trạng thái cấu hình đang bật -->
+                            <div id="feature-toggle-summary" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
+                                <span>Đang bật: <strong class="text-emerald-300">Auto-Edit Video</strong> • <strong class="text-amber-300">Text Hook</strong> • <strong class="text-sky-300">Phụ đề Vietsub</strong></span>
+                                <button onclick="switchTab('editor')" class="text-violet-400 hover:text-violet-300 font-bold underline">Mở Xưởng Edit Video &rarr;</button>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Khung Ảnh Demo trực quan 9:16 cập nhật theo công tắc -->
+                        <div class="lg:col-span-5 flex flex-col items-center">
+                            <div class="w-full max-w-[270px] rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl relative aspect-[9/16]">
+                                <img id="prompt-demo-preview-img" alt="Ảnh Demo Prompt, Edit, Text & Vietsub" class="w-full h-full object-cover">
+                                <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                                    <span id="demo-badge-edit" class="px-2 py-0.5 rounded bg-emerald-500/90 text-slate-950 text-[10px] font-black shadow">EDIT: BẬT (1.15x • 9:16)</span>
+                                    <span class="px-2 py-0.5 rounded bg-black/75 text-slate-200 text-[10px] font-bold">DEMO 9:16</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 text-center mt-2">Ảnh demo mô phỏng bố cục thực tế sau khi áp dụng các công tắc bên trái.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KHU VỰC HIỂN THỊ 3 PHƯƠNG ÁN KỊCH BẢN & ẢNH MINH HỌA 9:16 -->
+            <div id="results-section" class="hidden space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-emerald-400"></i>
+                        <span>3 Phương Án Kịch Bản Đa Góc Cạnh & Ảnh Minh Họa 9:16</span>
+                    </h3>
+                    <span class="text-xs text-slate-400">Mỗi phương án gồm 4–6 phân cảnh liên hoàn & Prompt tiếng Anh chuẩn Google Flow</span>
+                </div>
+                <div id="three-options-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-5"></div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: XƯỞNG TỰ ĐỘNG EDIT VIDEO & CHÈN VIETSUB 1-CHẠM          -->
+        <!-- ============================================================== -->
+        <section id="tab-editor" class="hidden">
+            <div class="rounded-2xl bg-[#0D1322] border border-slate-800/90 p-4 sm:p-6 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="scissors" class="w-5 h-5 text-violet-400"></i>
+                            <span>Xưởng Tự Động Edit Video & Chèn Vietsub (Chuẩn TikTok 9:16)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Nạp các đoạn video ngắn từ Google Flow, tự động ghép nối cảnh, gắn Text Hook + Vietsub chuẩn thời gian và xuất file thành phẩm.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- Cột điều khiển bên trái -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="p-4 rounded-xl bg-slate-950 border border-dashed border-slate-700 hover:border-violet-500/60 transition">
+                            <label class="flex flex-col items-center justify-center cursor-pointer py-3 text-center">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-violet-400 mb-2"></i>
+                                <span class="text-xs sm:text-sm font-bold text-white">Chọn các clip video (.mp4, .mov, .webm) từ Google Flow</span>
+                                <span class="text-[11px] text-slate-400 mt-1">Hỗ trợ chọn nhiều clip cùng lúc để tự động nối cảnh liền mạch</span>
+                                <input id="studio-video-files" type="file" accept="video/*" multiple onchange="handleStudioVideoUpload(event)" class="hidden">
+                            </label>
+                            <div id="studio-clips-list" class="mt-2 space-y-1.5 text-xs text-slate-300"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-300 mb-1">Text Hook tiêu đề trên đầu video:</label>
+                                <input id="studio-hook-title" type="text" value="ĐỪNG LƯỚT QUA BÍ MẬT NÀY!" oninput="renderStudioPreview()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:border-violet-500 focus:outline-none">
+                            </div>
+                            <div class="flex items-end">
+                                <label class="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+                                    <span class="text-xs font-bold text-slate-200">Hiển thị phụ đề Vietsub</span>
+                                    <input id="enable-subtitles" type="checkbox" checked onchange="renderStudioPreview()" class="w-4 h-4 accent-emerald-500">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 mb-1">Lời thoại tiếng Việt (tự động chia từng câu Vietsub):</label>
+                            <textarea id="studio-script-input" rows="4" oninput="renderStudioPreview()" placeholder="Dán lời thoại tiếng Việt vào đây để tự động chạy phụ đề..." class="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:border-violet-500 focus:outline-none">Ngay từ bước đầu tiên, chỉ cần nhìn kỹ chi tiết này là bạn sẽ thấy sự khác biệt hoàn toàn. Làm đúng theo từng bước dưới đây để đạt kết quả ngay tại nhà!</textarea>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button onclick="autoBuildAndPlayStudio()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center gap-2 shadow-lg transition">
+                                <i data-lucide="play" class="w-4 h-4"></i>
+                                <span>Chạy Xem Trước Edit & Vietsub</span>
+                            </button>
+                            <button id="btn-export-video" onclick="exportFinalStudioVideo()" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs flex items-center gap-2 transition">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                <span>Xuất Video Thành Phẩm (.webm)</span>
+                            </button>
+                        </div>
+                        <div id="studio-export-status" class="text-xs text-emerald-300 font-semibold"></div>
+                    </div>
+
+                    <!-- Cột khung xem trước 9:16 bên phải -->
+                    <div class="lg:col-span-5 flex flex-col items-center">
+                        <div class="w-full max-w-[300px] rounded-2xl overflow-hidden border-2 border-slate-700 bg-black shadow-2xl aspect-[9/16] relative">
+                            <canvas id="studio-canvas" width="540" height="960" class="w-full h-full object-cover block"></canvas>
+                        </div>
+                        <video id="studio-hidden-video" playsinline muted class="hidden"></video>
+                        <p class="text-[11px] text-slate-400 text-center mt-2">Khung xem trước trực tiếp 9:16 (bao gồm cắt nhịp, Text Hook & Vietsub).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 3: KHO KỊCH BẢN & LỊCH ĐĂNG KÊNH                           -->
+        <!-- ============================================================== -->
+        <section id="tab-vault" class="hidden">
+            <div class="rounded-2xl bg-[#0D1322] border border-slate-800/90 p-4 sm:p-6 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="folder-kanban" class="w-5 h-5 text-amber-400"></i>
+                            <span>Kho Kịch Bản Đã Lưu & Lịch Sản Xuất</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Lưu trữ toàn bộ kịch bản phân cảnh, lời thoại và Prompt Google Flow để sản xuất hàng loạt.</p>
+                    </div>
+                </div>
+                <div id="vault-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- MODAL CÀI ĐẶT GEMINI API KEY                                   -->
+    <!-- ============================================================== -->
+    <div id="api-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-2xl bg-[#0F172A] border border-slate-700 p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                    <i data-lucide="key" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Kết Nối Gemini API Key (Google AI Studio)</span>
+                </h3>
+                <button onclick="closeApiModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Dán mã <code class="text-emerald-300">AIzaSy...</code> từ <a href="https://aistudio.google.com/apikey" target="_blank" class="text-sky-400 underline">Google AI Studio</a>. Mã chỉ lưu cục bộ trên trình duyệt của bạn.</p>
+            <div>
+                <label class="block text-[11px] font-bold text-slate-300 mb-1">Gemini API Key:</label>
+                <input id="api-key-input" type="password" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-slate-300 mb-1">Model AI ưu tiên:</label>
+                <select id="api-model-select" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:border-emerald-500 focus:outline-none">
+                    <option value="gemini-3-flash-preview">gemini-3-flash-preview (Nhanh & Chuẩn xác)</option>
+                    <option value="gemini-3.1-pro-preview">gemini-3.1-pro-preview (Kịch bản sâu sắc nhất)</option>
+                    <option value="gemini-3.1-flash-lite-preview">gemini-3.1-flash-lite-preview (Tiết kiệm hạn mức)</option>
+                </select>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="closeApiModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Đóng</button>
+                <button onclick="saveApiKeySettings()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold">Lưu & Kích Hoạt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL TẠO HỒ SƠ KÊNH MỚI                                       -->
+    <!-- ============================================================== -->
+    <div id="channel-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-2xl bg-[#0F172A] border border-slate-700 p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-extrabold text-white">Tạo Hồ Sơ Kênh Mới</h3>
+                <button onclick="closeNewChannelModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-300 mb-1">Tên kênh & ID (@handle):</label>
+                    <input id="new-ch-name" type="text" placeholder="VD: Bếp Nhà Minh (@bepnhaminh)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-300 mb-1">Chủ đề & phong cách chính của kênh:</label>
+                    <textarea id="new-ch-desc" rows="3" placeholder="VD: Chia sẻ mẹo nấu ăn nhanh 15 phút cho người đi làm, quay cận cảnh bếp ấm áp..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-2">
+                <button onclick="closeNewChannelModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Hủy</button>
+                <button onclick="createNewChannelProfile()" class="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-extrabold">Lưu Hồ Sơ Kênh</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL XÁC NHẬN XÓA HỒ SƠ KÊNH                                  -->
+    <!-- ============================================================== -->
+    <div id="delete-channel-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-sm rounded-2xl bg-[#0F172A] border border-rose-500/40 p-5 shadow-2xl space-y-4">
+            <h3 class="text-sm font-extrabold text-rose-300">Xác nhận xóa hồ sơ kênh?</h3>
+            <p id="delete-channel-msg" class="text-xs text-slate-300 leading-relaxed">Bạn có chắc muốn xóa hồ sơ kênh này không? Hệ thống sẽ quay về chế độ Đa chủ đề tự do.</p>
+            <div class="flex items-center justify-end gap-2">
+                <button onclick="closeDeleteChannelModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Giữ lại</button>
+                <button onclick="confirmDeleteActiveChannel()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-extrabold">Xóa kênh</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL XEM CHI TIẾT 12 TIÊU CHÍ CỦA TỪNG Ý TƯỞNG                -->
+    <!-- ============================================================== -->
+    <div id="idea-detail-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl max-h-[88vh] flex flex-col rounded-2xl bg-[#0F172A] border border-slate-700 shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between gap-2">
+                <h3 id="modal-idea-title" class="text-sm sm:text-base font-extrabold text-white line-clamp-1">Chi tiết 12 tiêu chí giữ chân</h3>
+                <button onclick="closeIdeaDetailModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="modal-idea-body" class="p-4 sm:p-5 overflow-y-auto space-y-3 text-xs text-slate-200 leading-relaxed"></div>
+            <div class="p-3.5 border-t border-slate-800 flex items-center justify-end gap-2 bg-slate-950">
+                <button onclick="closeIdeaDetailModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Đóng</button>
+                <button id="modal-idea-use-btn" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold">Dựng Kịch Bản 4–6 Cảnh Ngay &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THÔNG BÁO TOAST -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+    <script>
+        // =========================================================================
+        // 1. TRẠNG THÁI ỨNG DỤNG & KHỞI TẠO
+        // =========================================================================
+        const STORAGE_KEY = 'turbo_studio_pro_v6_state';
+
+        const HOWTO_PROMPT_TEMPLATES = [
+            "Tạo video hướng dẫn nấu ăn về cách làm món trứng ốp kiểu Hàn. Video gồm đầy đủ từng bước thực hiện, có cảnh quay cận cảnh rõ nét về các nguyên liệu đang được chế biến (trứng gà tươi, hành lá thái nhỏ, nước tương, dầu mè, ớt bột Hàn Quốc). Ngoài ra, không gian trong video là một căn bếp với ánh sáng ấm áp, nhạc nền nhẹ nhàng.",
+            "Tạo video hướng dẫn đơn giản, vui nhộn dạy bé cách vẽ mèo con đáng yêu. Các bước hướng dẫn được thể hiện chi tiết từng nét từ đầu tròn, đôi tai nhọn, ria mép đến bước tô màu cam vàng sinh động. Trong video, sử dụng giọng nói thân thiện, gần gũi với trẻ em, tạo niềm thích thú để các bé làm theo.",
+            "Tạo video hướng dẫn tập yoga cho người mới bắt đầu. Video lấy bối cảnh ngoài công viên có cỏ cây xanh mát, ánh nắng buổi sáng chan hòa. Người hướng dẫn là một cô gái tầm tuổi 30, mặc đồ tập yoga, có vóc dáng đẹp. Các bước hướng dẫn chậm rãi, có cảnh quay đặc tả vào từng tư thế hít thở và giãn cơ.",
+            "Tạo video hướng dẫn từng bước cách làm túi handmade tặng bạn gái. Trong video hiển thị đầy đủ các vật liệu cần thiết như cuộn len mềm, công cụ móc len, khung túi kim loại và đồ trang trí xinh xắn. Video hướng dẫn chi tiết với các cảnh quay cận cảnh đôi tay móc từng mũi len, thêm nhạc nền vui tươi và điều chỉnh ánh sáng ấm áp thu hút."
+        ];
+
+        let appState = {
+            apiKey: '',
+            selectedModel: 'gemini-3-flash-preview',
+            channels: [],
+            activeChannelId: 'general',
+            selectedTopicNature: 'auto',
+            selectedDuration: 25,
+            selectedScenes: 4,
+            features: { edit: true, text: true, sub: true },
+            dailyIdeas: [],
+            currentOptions: [],
+            savedPrompts: []
+        };
+
+        let currentDemoBaseImage = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            renderChannelSelect();
+            renderSavedPrompts();
+            fetchDailyIdeas(false);
+            syncFeatureTogglesUI();
+            refreshPromptDemoPreview();
+            renderStudioPreview();
+            if (window.lucide) lucide.createIcons();
+        });
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    appState = { ...appState, ...parsed };
+                    // Tự động nâng cấp nếu lưu model cũ đã ngừng hỗ trợ
+                    const validModels = ['gemini-3-flash-preview', 'gemini-3.1-pro-preview', 'gemini-3.1-flash-lite-preview'];
+                    if (!validModels.includes(appState.selectedModel)) {
+                        appState.selectedModel = 'gemini-3-flash-preview';
+                    }
+                    if (!appState.features) {
+                        appState.features = { edit: true, text: true, sub: true };
+                    }
+                }
+            } catch (e) {}
+            updateApiStatusUI();
+            const editEl = document.getElementById('toggle-feature-edit');
+            const textEl = document.getElementById('toggle-feature-text');
+            const subEl = document.getElementById('toggle-feature-sub');
+            if (editEl) editEl.checked = !!appState.features.edit;
+            if (textEl) textEl.checked = !!appState.features.text;
+            if (subEl) subEl.checked = !!appState.features.sub;
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    apiKey: appState.apiKey,
+                    selectedModel: appState.selectedModel,
+                    channels: appState.channels,
+                    activeChannelId: appState.activeChannelId,
+                    features: appState.features,
+                    savedPrompts: appState.savedPrompts
+                }));
+            } catch (e) {}
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const el = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-950/95 border-emerald-500/60 text-emerald-200',
+                error: 'bg-rose-950/95 border-rose-500/60 text-rose-200',
+                info: 'bg-slate-900/95 border-slate-700 text-slate-200'
+            };
+            el.className = `p-3 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md transition-all ${colors[type] || colors.info}`;
+            el.textContent = msg;
+            container.appendChild(el);
+            setTimeout(() => { el.remove(); }, 4500);
+        }
+
+        // =========================================================================
+        // 2. ĐIỀU HƯỚNG TAB & CÀI ĐẶT API KEY (AUTO-FALLBACK MODEL HIỆN HÀNH)
+        // =========================================================================
+        function switchTab(tabName) {
+            ['ideas', 'editor', 'vault'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (sec) sec.classList.toggle('hidden', t !== tabName);
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = 'tab-active px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-bold flex items-center gap-2 whitespace-nowrap transition';
+                    } else {
+                        btn.className = 'px-3.5 py-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900 text-slate-300 text-xs font-bold flex items-center gap-2 whitespace-nowrap transition';
+                    }
+                }
+            });
+            if (tabName === 'editor') renderStudioPreview();
+            if (tabName === 'vault') renderSavedPrompts();
+        }
+
+        function openApiModal() {
+            document.getElementById('api-key-input').value = appState.apiKey || '';
+            document.getElementById('api-model-select').value = appState.selectedModel || 'gemini-3-flash-preview';
+            document.getElementById('api-modal').classList.remove('hidden');
+        }
+        function closeApiModal() {
+            document.getElementById('api-modal').classList.add('hidden');
+        }
+        function saveApiKeySettings() {
+            appState.apiKey = (document.getElementById('api-key-input').value || '').trim();
+            appState.selectedModel = document.getElementById('api-model-select').value || 'gemini-3-flash-preview';
+            saveToLocalStorage();
+            updateApiStatusUI();
+            closeApiModal();
+            showToast(appState.apiKey ? `Đã lưu API Key (${appState.selectedModel})!` : 'Đã xóa API Key, dùng chế độ cục bộ.', 'success');
+        }
+        function updateApiStatusUI() {
+            const dot = document.getElementById('api-status-dot');
+            const text = document.getElementById('api-status-text');
+            if (!dot || !text) return;
+            if (appState.apiKey) {
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                text.textContent = `AI Sẵn Sàng (${appState.selectedModel})`;
+            } else {
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                text.textContent = 'Cài đặt API Key';
+            }
+        }
+
+        async function callGeminiJSON(promptText) {
+            if (!appState.apiKey) throw new Error('Chưa nhập API Key');
+            const chain = [
+                appState.selectedModel,
+                'gemini-3-flash-preview',
+                'gemini-3.1-pro-preview',
+                'gemini-3.1-flash-lite-preview'
+            ].filter((v, i, a) => v && a.indexOf(v) === i);
+
+            let lastErr = '';
+            for (const modelName of chain) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(appState.apiKey)}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        generationConfig: { responseMimeType: 'application/json' }
+                    })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    if (txt) {
+                        appState.selectedModel = modelName;
+                        updateApiStatusUI();
+                        return JSON.parse(txt);
+                    }
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    lastErr = errData?.error?.message || `HTTP ${res.status}`;
+                }
+            }
+            throw new Error(lastErr || 'Không kết nối được Gemini API');
+        }
+
+        // =========================================================================
+        // 3. QUẢN LÝ HỒ SƠ KÊNH (TẠO KÊNH & XÓA KÊNH)
+        // =========================================================================
+        function renderChannelSelect() {
+            const sel = document.getElementById('channel-select');
+            const delBtn = document.getElementById('btn-delete-channel');
+            if (!sel) return;
+            sel.innerHTML = `<option value="general" class="bg-slate-900">Đa chủ đề tự do (Tự động nhận diện)</option>`;
+            appState.channels.forEach(ch => {
+                const opt = document.createElement('option');
+                opt.value = ch.id;
+                opt.className = 'bg-slate-900';
+                opt.textContent = ch.name;
+                sel.appendChild(opt);
+            });
+            sel.value = appState.activeChannelId || 'general';
+            if (delBtn) {
+                delBtn.classList.toggle('hidden', sel.value === 'general');
+            }
+        }
+
+        function onSelectChannel(id) {
+            appState.activeChannelId = id;
+            saveToLocalStorage();
+            renderChannelSelect();
+            const ch = appState.channels.find(c => c.id === id);
+            if (ch) {
+                document.getElementById('strat-niche').value = ch.desc || ch.name;
+                showToast(`Đã chuyển sang hồ sơ: ${ch.name}`, 'info');
+            }
+        }
+
+        function openNewChannelModal() {
+            document.getElementById('new-ch-name').value = '';
+            document.getElementById('new-ch-desc').value = '';
+            document.getElementById('channel-modal').classList.remove('hidden');
+        }
+        function closeNewChannelModal() {
+            document.getElementById('channel-modal').classList.add('hidden');
+        }
+        function createNewChannelProfile() {
+            const name = (document.getElementById('new-ch-name').value || '').trim();
+            const desc = (document.getElementById('new-ch-desc').value || '').trim();
+            if (!name) {
+                showToast('Vui lòng nhập tên kênh!', 'error');
+                return;
+            }
+            const id = 'ch_' + Date.now();
+            appState.channels.push({ id, name, desc });
+            appState.activeChannelId = id;
+            saveToLocalStorage();
+            renderChannelSelect();
+            closeNewChannelModal();
+            showToast(`Đã tạo hồ sơ kênh "${name}"!`, 'success');
+        }
+
+        function openDeleteChannelModal() {
+            if (appState.activeChannelId === 'general') return;
+            const ch = appState.channels.find(c => c.id === appState.activeChannelId);
+            document.getElementById('delete-channel-msg').textContent = `Bạn có chắc muốn xóa hồ sơ kênh "${ch ? ch.name : ''}" không? Hệ thống sẽ quay về chế độ Đa chủ đề tự do.`;
+            document.getElementById('delete-channel-modal').classList.remove('hidden');
+        }
+        function closeDeleteChannelModal() {
+            document.getElementById('delete-channel-modal').classList.add('hidden');
+        }
+        function confirmDeleteActiveChannel() {
+            appState.channels = appState.channels.filter(c => c.id !== appState.activeChannelId);
+            appState.activeChannelId = 'general';
+            saveToLocalStorage();
+            renderChannelSelect();
+            closeDeleteChannelModal();
+            showToast('Đã xóa hồ sơ kênh và quay về Đa chủ đề tự do.', 'info');
+        }
+
+        // =========================================================================
+        // 4. NHẬN DIỆN BẢN CHẤT CHỦ ĐỀ & TẠO 20 Ý TƯỞNG CHUẨN 12 TIÊU CHÍ
+        // =========================================================================
+        function setTopicNature(nature) {
+            appState.selectedTopicNature = nature;
+            ['auto', 'entertainment', 'intangible', 'event', 'career', 'howto'].forEach(n => {
+                const btn = document.getElementById(`nature-btn-${n}`);
+                if (!btn) return;
+                btn.className = (n === nature)
+                    ? 'px-2.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-[11px] font-bold transition'
+                    : 'px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-semibold transition';
+            });
+        }
+
+        function classifyTopicNature(niche) {
+            if (appState.selectedTopicNature !== 'auto') return appState.selectedTopicNature;
+            const q = (niche || '').toLowerCase();
+            if (/mèo|chó|thú cưng|xe máy|xe đạp|hài|troll|hoạt hình|siêu nhân|giải trí|nhảy|đua xe/.test(q)) return 'entertainment';
+            if (/cách làm|hướng dẫn|nấu|món|vẽ|tập|yoga|handmade|móc len|sửa nhà|sửa chữa|mẹo|bước/.test(q)) return 'howto';
+            if (/nghề|thợ|shipper|kế toán|giáo viên|bác sĩ|bán hàng|kinh doanh|công việc|ca làm|sếp|đồng nghiệp/.test(q)) return 'career';
+            if (/ngày đầu|họp lớp|đám cưới|về quê|khai trương|sự kiện|thi cử|tốt nghiệp|sinh nhật/.test(q)) return 'event';
+            return 'intangible';
+        }
+
+        async function fetchDailyIdeas(useApiIfAvailable = true) {
+            const niche = (document.getElementById('strat-niche')?.value || '').trim() || 'Cuộc sống, Kỹ năng thực tế & Sáng tạo nội dung';
+            const audience = (document.getElementById('strat-audience')?.value || '').trim() || 'Người xem TikTok / Reels 18–40 tuổi';
+            const goal = document.getElementById('strat-goal')?.value || 'LƯỢT XEM 1M+';
+            const length = document.getElementById('strat-length')?.value || '30–60 GIÂY';
+            const style = document.getElementById('strat-style')?.value || 'KỂ CHUYỆN';
+            const edge = (document.getElementById('strat-edge')?.value || '').trim() || 'Góc quay cận cảnh thực tế, mạch truyện cuốn hút';
+            const avoid = (document.getElementById('strat-avoid')?.value || '').trim() || 'Lý thuyết sáo rỗng';
+            const ctaType = document.getElementById('strat-cta')?.value || 'BÌNH LUẬN';
+
+            const detectedNature = classifyTopicNature(niche);
+            const natureNames = {
+                entertainment: 'Giải trí / Thú cưng / Tình huống sáng tạo thị giác',
+                howto: 'Hướng dẫn quy trình / Kỹ năng thực hành từng bước',
+                career: 'Nghề nghiệp / Hậu trường công việc đời thực',
+                event: 'Sự kiện / Cột mốc & Diễn biến hiện trường',
+                intangible: 'Phi vật thể / Tâm lý, cảm xúc & câu chuyện hàng ngày'
+            };
+
+            document.getElementById('topic-analysis-title').textContent = `Ngách chủ đề: "${niche}" (${natureNames[detectedNature]})`;
+            document.getElementById('topic-analysis-desc').textContent = `Đối tượng: ${audience} • Mục tiêu: ${goal} • Độ dài: ${length} • Phong cách: ${style}`;
+
+            const btn = document.getElementById('btn-generate-20');
+            if (btn && useApiIfAvailable) {
+                btn.disabled = true;
+                btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Đang phân tích & tạo 20 ý tưởng...</span>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            let ideasList = null;
+            try {
+                if (useApiIfAvailable && appState.apiKey) {
+                    const prompt = `Bạn là chuyên gia chiến lược video ngắn (TikTok, Reels) chuyên về giữ chân người xem.
+Hãy tạo ĐÚNG 20 ý tưởng video ngắn mới, độc đáo, bám sát thực tế đời sống xoay quanh:
+- Ngách chủ đề: "${niche}" (Phân loại bản chất: ${natureNames[detectedNature]})
+- Đối tượng mục tiêu: "${audience}"
+- Mục tiêu chính: "${goal}"
+- Độ dài video: "${length}"
+- Phong cách nội dung: "${style}"
+- Lợi thế/Chuyên môn độc đáo: "${edge}"
+- Chủ đề muốn tránh: "${avoid}"
+- CTA ưu tiên: "${ctaType}"
+
+Mỗi ý tưởng PHẢI có đầy đủ 12 trường JSON sau:
+{
+  "title": "Tên ý tưởng hấp dẫn, cụ thể (không sáo rỗng)",
+  "category": "Nhãn góc tiếp cận",
+  "score": 9.4,
+  "topRank": 1, // Đánh số 1..5 cho 5 ý tưởng tốt nhất nên làm đầu tiên, các ý còn lại để 0
+  "topReason": "Lý do ngắn gọn vì sao ý tưởng này mạnh nhất về giữ chân (nếu thuộc Top 5)",
+  "hook": "1. Hook thu hút (1-3s đầu): Câu mở đầu hoặc hành động hình ảnh đầu tiên tạo tò mò mạnh",
+  "coreIdea": "2. Ý tưởng cốt lõi: Tóm tắt nội dung và giá trị người xem nhận được",
+  "retentionStructure": "3. Cấu trúc giữ chân: Hook -> Tạo tò mò -> Giá trị/Câu chuyện -> Ngắt nhịp -> Payoff -> CTA",
+  "scriptPoints": "4. Các điểm chính/Kịch bản chi tiết theo thứ tự xuất hiện (chưa lộ kết sớm)",
+  "visualGuide": "5. Hướng dẫn hình ảnh: Góc quay cận, B-roll, ánh sáng, chuyển động",
+  "onScreenText": "6. Chữ hiển thị trên màn hình (ngắn gọn, nhấn mạnh ý chính)",
+  "transitions": "7. Các điểm chuyển cảnh (ít nhất 3 lần đổi góc máy/nhịp dựng)",
+  "emotion": "8. Yếu tố cảm xúc tâm lý chính tác động người xem",
+  "payoff": "9. Điểm cao trào (Payoff) thỏa đáng ở cuối video",
+  "cta": "10. Kêu gọi hành động (CTA) tự nhiên cho ${ctaType}",
+  "risk": "11. Rủi ro giữ chân dễ bị lướt qua & cách khắc phục",
+  "viralExplain": "12. Giải thích điểm số tiềm năng lan truyền (Watch time, Share, Comment, Rewatch)"
+}
+Trả về JSON array gồm đúng 20 object.`;
+                    const parsed = await callGeminiJSON(prompt);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        ideasList = parsed.slice(0, 20);
+                    }
+                }
+            } catch (err) {
+                if (useApiIfAvailable) {
+                    showToast(`Dùng bộ chiến lược cục bộ (${err.message})`, 'info');
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i><span>Tạo 20 Ý Tưởng Chiến Lược & Top 5 Ưu Tiên</span>`;
+                    if (window.lucide) lucide.createIcons();
+                }
+            }
+
+            if (!ideasList) {
+                ideasList = buildTopicAware20Ideas(niche, detectedNature, audience, goal, length, style, ctaType);
+            }
+
+            appState.dailyIdeas = ideasList;
+            renderTop5And20Ideas();
+        }
+
+        function buildTopicAware20Ideas(niche, nature, audience, goal, length, style, ctaType) {
+            const entertainmentAngles = [
+                { t: `Khoảnh khắc "${niche}" xuất hiện bất ngờ giữa phố khiến cả ngã tư ngoái nhìn`, hook: `[Cận cảnh tiếng động cơ & ánh mắt ngơ ngác 2 giây đầu] "Tưởng nhìn nhầm cho đến khi camera zoom sát lại..."`, core: `Ghi lại phản ứng chân thật đầy bất ngờ của người xung quanh khi chứng kiến tình huống "${niche}".`, emo: `Ngạc nhiên & Hài hước tích cực — tạo dopamine tức thì khiến người xem muốn gửi ngay cho bạn bè.` },
+                { t: `Hậu trường 3 lần thử bất thành trước khi quay được cảnh "${niche}" mượt như phim`, hook: `[Cảnh trượt bánh / loạng choạng hài hước giây đầu tiên] "Đừng tưởng lên hình ngầu mà dễ, xem 3 pha xử lý trước đó mới thấy..."`, core: `Kể lại quá trình tập làm quen, giữ thăng bằng và những pha xử lý siêu đáng yêu phía sau ống kính.`, emo: `Tò mò & Đồng cảm — người xem thích xem quá trình thật phía sau thành quả hoàn hảo.` },
+                { t: `Góc nhìn thứ nhất (POV): Thế giới trông như thế nào khi đồng hành cùng "${niche}"?`, hook: `[Góc máy thấp ngang tầm mắt lao vút qua con hẻm nắng] "Nếu bạn là nhân vật chính trong hành trình này, bạn sẽ thấy gì?"`, core: `Đặt camera ở góc nhìn nhân vật chính tạo cảm giác nhập vai sống động từng giây.`, emo: `Khát khao trải nghiệm & Tò mò thị giác — giữ người xem dán mắt đến điểm dừng cuối.` },
+                { t: `Thử thách phản xạ: Điều gì xảy ra khi "${niche}" gặp vật cản bất ngờ trên đường?`, hook: `[Khung hình dừng lại 1 giây trước chướng ngại vật] "3 giây nữa chuyện gì sẽ xảy ra ở khúc cua này?"`, core: `Tạo khoảng trống thông tin ngay từ đầu buộc người xem phải chờ xem cách xử lý tình huống.`, emo: `Hồi hộp nhẹ & Giải trí — kích thích tỷ lệ xem hết video (Completion Rate) vượt 85%.` },
+                { t: `So sánh biểu cảm trước và sau khi bắt đầu hành trình "${niche}"`, hook: `[Chia đôi màn hình: bên trái ngái ngủ, bên phải cực kỳ tập trung] "Cùng một nhân vật nhưng thái độ thay đổi 180 độ!"`, core: `Đối chiếu sự thay đổi thần thái đầy cuốn hút qua 4 mốc thời gian trong ngày.`, emo: `Hài hước & Thích thú — kích thích người xem bình luận đặt tên cho biểu cảm.` }
+            ];
+
+            const howtoAngles = [
+                { t: `Hướng dẫn từng bước thực hiện "${niche}" chuẩn đẹp ngay từ lần đầu`, hook: `[Cận cảnh thành phẩm hoàn thiện 2 giây đầu] "Chỉ cần làm đúng 4 bước này, bạn sẽ tự làm được ngay tại nhà!"`, core: `Trình bày tuần tự từ chuẩn bị nguyên liệu/dụng cụ, thao tác tay cận cảnh đến thành phẩm hoàn thiện dưới ánh sáng ấm áp.`, emo: `Tự tin làm được & Khát khao thành thạo — tỷ lệ Lưu video (Save) cực cao.` },
+                { t: `3 lỗi sai phổ biến khiến bạn làm "${niche}" mãi không đạt kết quả như ý`, hook: `[Cảnh thực tế làm hỏng ngay giây đầu] "90% người mới bắt đầu đều vướng ngay bước số 2 này!"`, core: `Chỉ rõ từng lỗi thao tác thường gặp và cách điều chỉnh ngay lập tức để thấy sự khác biệt.`, emo: `Sợ mắc sai lầm & Muốn kiểm soát kết quả — buộc người xem xem hết để tránh lỗi.` },
+                { t: `Kiểm chứng thực tế: Làm "${niche}" theo cách truyền thống vs cách tối ưu mới`, hook: `[Đặt 2 mẫu thử cạnh nhau dưới ánh sáng rõ nét] "Cùng nguyên liệu nhưng kết quả khác nhau một trời một vực!"`, core: `So sánh trực quan từng bước thực hiện và kết quả cuối cùng sau khi hoàn thiện.`, emo: `Tò mò & Công nhận thực tế — kích thích bình luận tranh luận cách làm hay hơn.` },
+                { t: `Cận cảnh bộ dụng cụ & nguyên liệu chuẩn cần có trước khi bắt tay vào "${niche}"`, hook: `[Góc quay từ trên xuống bày biện gọn gàng] "Đừng vội bắt đầu nếu trên bàn bạn còn thiếu đúng món này!"`, core: `Giới thiệu chi tiết từng món vật liệu, cách chọn nguyên liệu tươi/chuẩn và mẹo sắp xếp góc làm việc.`, emo: `Chuẩn bị chu đáo & An tâm — người xem lưu lại làm checklist trước khi thực hành.` },
+                { t: `Bí quyết điều chỉnh ánh sáng, nhịp độ và chi tiết nhỏ giúp "${niche}" đạt điểm 10`, hook: `[Zoom đặc tả vào thao tác tay chậm rãi] "Chính 10 giây xử lý tinh tế này quyết định toàn bộ chất lượng!"`, core: `Đi sâu vào kỹ thuật tinh chỉnh ở giai đoạn hoàn thiện để nâng tầm thành phẩm.`, emo: `Ngưỡng mộ tay nghề & Học hỏi sâu — giữ chân nhóm khán giả yêu sự chỉn chu.` }
+            ];
+
+            const generalAngles = [
+                { t: `Câu chuyện đời thực phía sau "${niche}": Điều ít ai để ý trong sinh hoạt hàng ngày`, hook: `[Cận cảnh ánh mắt & khoảnh khắc đời thường thật 2 giây đầu] "Nếu không trải qua tận mắt, có lẽ mình vẫn nghĩ mọi thứ đơn giản..."`, core: `Kể lại một lát cắt chân thật xoay quanh "${niche}" với diễn biến tự nhiên và bài học thực tế.`, emo: `Đồng cảm sâu sắc — chạm đúng trải nghiệm thật của ${audience}.` },
+                { t: `Khoảnh khắc bước ngoặt khi đối mặt trực tiếp với tình huống "${niche}"`, hook: `[Không gian tĩnh lặng 2 giây rồi chuyển cảnh dứt khoát] "Mọi chuyện chỉ thực sự thay đổi từ đúng câu nói này..."`, core: `Dẫn dắt từ hiểu lầm ban đầu đến cú lật góc nhìn thực tế ở cuối video.`, emo: `Tò mò & Chuyển đổi nhận thức — khiến người xem muốn xem lại từ đầu.` },
+                { t: `Góc nhìn người trong cuộc: Một ngày thực tế gắn liền với "${niche}" diễn ra thế nào?`, hook: `[Đồng hồ điểm 6h30 sáng, tiếng động sinh hoạt thật] "Phía sau vẻ ngoài bình thản là cả một chuỗi áp lực ít người thấy..."`, core: `Theo chân nhân vật qua 4 mốc thời gian trong ngày với nhiều chi tiết đời thường chân thực.`, emo: `Được thấu hiểu & Trân trọng — kích thích chia sẻ cho người đồng cảnh ngộ.` },
+                { t: `Điều gì xảy ra nếu bạn thay đổi cách phản ứng quen thuộc với "${niche}"?`, hook: `[Cảnh đối thoại căng thẳng dừng lại đúng nhịp] "Thay vì giải thích dài dòng, hãy thử làm đúng điều này..."`, core: `Phân tích hai cách ứng xử trái ngược nhau trong cùng một hoàn cảnh đời thực.`, emo: `Kiểm soát tình huống & Khát khao trưởng thành — tạo lượng bình luận chia sẻ trải nghiệm cá nhân.` },
+                { t: `3 dấu hiệu nhận biết sớm về "${niche}" mà người có kinh nghiệm luôn quan sát kỹ`, hook: `[Cận cảnh chi tiết nhỏ thường bị bỏ qua] "Chỉ cần nhìn đúng 3 điểm này trong 5 giây đầu là hiểu ngay bản chất!"`, core: `Đúc kết kinh nghiệm thực chiến thành 3 dấu hiệu trực quan dễ áp dụng ngay.`, emo: `Cấp bách & Hữu ích — tối ưu lượt lưu và theo dõi kênh lâu dài.` }
+            ];
+
+            const basePool = nature === 'entertainment' ? entertainmentAngles : (nature === 'howto' ? howtoAngles : generalAngles);
+            const results = [];
+
+            for (let i = 0; i < 20; i++) {
+                const template = basePool[i % basePool.length];
+                const variantIndex = Math.floor(i / basePool.length) + 1;
+                const suffix = variantIndex === 1 ? '' : ` (Góc khai thác #${variantIndex}: Chiều sâu ${variantIndex === 2 ? 'hậu trường' : variantIndex === 3 ? 'đối chiếu thực tế' : 'cảm xúc & kết quả'})`;
+                const score = Number((9.6 - (i * 0.06)).toFixed(1));
+                const isTop5 = i < 5;
+
+                results.push({
+                    title: `${template.t}${suffix}`,
+                    category: style,
+                    score,
+                    topRank: isTop5 ? i + 1 : 0,
+                    topReason: isTop5 ? `Mở đầu bằng khoảng trống thông tin 3s đầu + chuyển cảnh liên tục giúp giữ Watch Time cao cho mục tiêu ${goal}.` : '',
+                    hook: template.hook,
+                    coreIdea: `${template.core} Thiết kế tối ưu cho định dạng ${length} nhắm tới ${audience}.`,
+                    retentionStructure: `Hook (0–3s) → Mở khoảng trống tò mò (3–8s) → Diễn biến thực tế & cận cảnh (8–20s) → Ngắt nhịp đổi góc máy → Cao trào Payoff → CTA ${ctaType}.`,
+                    scriptPoints: `Cảnh 1: Mở đầu bằng hình ảnh/hành động gây tò mò ngay lập tức. Cảnh 2: Bối cảnh thực tế và chi tiết vật lý rõ nét. Cảnh 3: Điểm thắt nút hoặc thử thách bất ngờ. Cảnh 4: Kết quả xác thực & thông điệp đọng lại.`,
+                    visualGuide: `Mở góc trung lấy bối cảnh tự nhiên → Cắt sang cận cảnh (Close-up) hành động/biểu cảm → Chèn B-roll chi tiết → Góc toàn khẳng định kết quả, ánh sáng chân thực.`,
+                    onScreenText: `"ĐỪNG BỎ QUA CHI TIẾT NÀY!" • "BƯỚC QUAN TRỌNG NHẤT" • "KẾT QUẢ THỰC TẾ"`,
+                    transitions: `Chuyển cảnh ít nhất 3 lần: Giây 03 (Cắt từ toàn cảnh sang cận cảnh) → Giây 10 (Đổi góc nghiêng phản ứng) → Giây 18 (Đặc tả chi tiết mấu chốt) → Giây 24 (Toàn cảnh kết quả).`,
+                    emotion: template.emo,
+                    payoff: `Giải đáp trọn vẹn nút thắt ở 3 giây đầu bằng hình ảnh kết quả rõ ràng, thuyết phục.`,
+                    cta: `Hãy ${ctaType} ngay trải nghiệm của bạn bên dưới để cùng thảo luận nhé!`,
+                    risk: `Rủi ro: Đoạn dẫn nhập dài dòng làm tụt người xem ở giây 4. Khắc phục: Cắt bỏ lời chào, vào thẳng hành động ngay khung hình đầu tiên.`,
+                    viralExplain: `Chấm ${score}/10: Nhịp cắt cảnh nhanh, bám sát đời thực nên dễ đạt tỷ lệ xem hết video và chia sẻ tự nhiên.`
+                });
+            }
+            return results;
+        }
+
+        function renderTop5And20Ideas() {
+            const top5Grid = document.getElementById('top5-ideas-grid');
+            const mainGrid = document.getElementById('daily-ideas-grid');
+            if (!top5Grid || !mainGrid) return;
+
+            const top5 = appState.dailyIdeas.filter(item => item.topRank > 0).slice(0, 5);
+            top5Grid.innerHTML = top5.map((item, idx) => `
+                <div onclick="openIdeaDetailModal(${idx})" class="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-amber-500/30 cursor-pointer transition flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-black mb-1.5">TOP #${idx + 1} (${item.score}/10)</span>
+                        <div class="text-xs font-bold text-white line-clamp-2">${escapeHtml(item.title)}</div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-2 line-clamp-2">${escapeHtml(item.topReason || item.coreIdea)}</p>
+                </div>
+            `).join('');
+
+            mainGrid.innerHTML = appState.dailyIdeas.map((item, idx) => `
+                <div class="rounded-2xl bg-slate-950/90 border border-slate-800 hover:border-emerald-500/40 p-4 flex flex-col justify-between transition">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2 py-0.5 rounded-md bg-violet-500/15 border border-violet-500/30 text-[10px] font-extrabold text-violet-300">#${idx + 1} • ${escapeHtml(item.category)}</span>
+                            <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 text-[11px] font-black">${item.score}/10</span>
+                        </div>
+                        <h4 class="text-sm font-extrabold text-white leading-snug">${escapeHtml(item.title)}</h4>
+                        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] text-amber-200">
+                            <strong>1. HOOK (1–3s ĐẦU):</strong> ${escapeHtml(item.hook)}
+                        </div>
+                        <p class="text-xs text-slate-300 line-clamp-2"><strong>2. Ý tưởng cốt lõi:</strong> ${escapeHtml(item.coreIdea)}</p>
+                        <p class="text-[11px] text-slate-400 line-clamp-2"><strong>8. Cảm xúc:</strong> ${escapeHtml(item.emotion)}</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-3 mt-3 border-t border-slate-800/80">
+                        <button onclick="openIdeaDetailModal(${idx})" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-bold text-slate-200 transition">
+                            Xem 12 tiêu chí
+                        </button>
+                        <button onclick="sendIdeaToWorkshop(${idx})" class="py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-[11px] font-extrabold text-emerald-300 transition">
+                            Dựng Prompt &rarr;
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openIdeaDetailModal(idx) {
+            const item = appState.dailyIdeas[idx];
+            if (!item) return;
+            document.getElementById('modal-idea-title').textContent = `#${idx + 1}: ${item.title}`;
+            const rows = [
+                ['1. Hook thu hút (1–3s đầu)', item.hook],
+                ['2. Ý tưởng cốt lõi', item.coreIdea],
+                ['3. Cấu trúc giữ chân', item.retentionStructure],
+                ['4. Các điểm chính / Kịch bản chi tiết', item.scriptPoints],
+                ['5. Hướng dẫn hình ảnh', item.visualGuide],
+                ['6. Chữ hiển thị trên màn hình', item.onScreenText],
+                ['7. Các điểm chuyển cảnh (≥ 3 lần)', item.transitions],
+                ['8. Yếu tố cảm xúc', item.emotion],
+                ['9. Điểm cao trào (Payoff)', item.payoff],
+                ['10. Kêu gọi hành động (CTA)', item.cta],
+                ['11. Rủi ro giữ chân & cách khắc phục', item.risk],
+                ['12. Tiềm năng lan truyền', item.viralExplain]
+            ];
+            document.getElementById('modal-idea-body').innerHTML = rows.map(([k, v]) => `
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                    <div class="text-[11px] font-extrabold text-emerald-300 mb-1">${escapeHtml(k)}</div>
+                    <div class="text-xs text-slate-200">${escapeHtml(v || '')}</div>
+                </div>
+            `).join('');
+            document.getElementById('modal-idea-use-btn').onclick = () => {
+                closeIdeaDetailModal();
+                sendIdeaToWorkshop(idx);
+            };
+            document.getElementById('idea-detail-modal').classList.remove('hidden');
+        }
+        function closeIdeaDetailModal() {
+            document.getElementById('idea-detail-modal').classList.add('hidden');
+        }
+
+        function sendIdeaToWorkshop(idx) {
+            const item = appState.dailyIdeas[idx];
+            if (!item) return;
+            const input = document.getElementById('idea-input');
+            input.value = `${item.title}\n- ${item.hook}\n- ${item.coreIdea}\n- Hướng dẫn hình ảnh & Chuyển cảnh: ${item.visualGuide} | ${item.transitions}\n- Payoff & CTA: ${item.payoff} | ${item.cta}`;
+            refreshPromptDemoPreview();
+            document.getElementById('workshop-box').scrollIntoView({ behavior: 'smooth' });
+            showToast('Đã nạp ý tưởng vào Xưởng Kịch Bản bên dưới!', 'success');
+        }
+
+        function copyAll20IdeasReport() {
+            if (!appState.dailyIdeas.length) return;
+            const text = appState.dailyIdeas.map((it, i) =>
+                `=== Ý TƯỞNG #${i + 1}: ${it.title} (${it.score}/10) ===\n${it.hook}\n${it.coreIdea}\n${it.retentionStructure}\n${it.scriptPoints}\n${it.visualGuide}\n${it.transitions}\n${it.payoff}\n${it.cta}\n`
+            ).join('\n');
+            copyTextSafe(text, 'Đã sao chép trọn bộ 20 ý tưởng chuẩn 12 tiêu chí!');
+        }
+
+        // =========================================================================
+        // 5. CÔNG TẮC GẠT (EDIT VIDEO / TEXT / VIETSUB) & ẢNH DEMO 9:16
+        // =========================================================================
+        function onFeatureToggleChange() {
+            const editEl = document.getElementById('toggle-feature-edit');
+            const textEl = document.getElementById('toggle-feature-text');
+            const subEl = document.getElementById('toggle-feature-sub');
+            appState.features = {
+                edit: editEl ? editEl.checked : true,
+                text: textEl ? textEl.checked : true,
+                sub: subEl ? subEl.checked : true
+            };
+            saveToLocalStorage();
+
+            const studioSubToggle = document.getElementById('enable-subtitles');
+            if (studioSubToggle) studioSubToggle.checked = appState.features.sub;
+
+            const studioTitleInput = document.getElementById('studio-hook-title');
+            if (studioTitleInput && !appState.features.text) {
+                studioTitleInput.dataset.prevTitle = studioTitleInput.value;
+                studioTitleInput.value = '';
+            } else if (studioTitleInput && appState.features.text && !studioTitleInput.value && studioTitleInput.dataset.prevTitle) {
+                studioTitleInput.value = studioTitleInput.dataset.prevTitle;
+            }
+
+            syncFeatureTogglesUI();
+            refreshPromptDemoPreview();
+            renderStudioPreview();
+        }
+
+        function syncFeatureTogglesUI() {
+            const { edit, text, sub } = appState.features;
+            const summaryEl = document.getElementById('feature-toggle-summary');
+            const badgeEdit = document.getElementById('demo-badge-edit');
+
+            if (badgeEdit) {
+                if (edit) {
+                    badgeEdit.textContent = 'EDIT: BẬT (1.15x • 9:16)';
+                    badgeEdit.className = 'px-2 py-0.5 rounded bg-emerald-500/90 text-slate-950 text-[10px] font-black shadow';
+                } else {
+                    badgeEdit.textContent = 'EDIT: TẮT (Video gốc)';
+                    badgeEdit.className = 'px-2 py-0.5 rounded bg-slate-800/90 text-slate-300 border border-slate-600 text-[10px] font-bold shadow';
+                }
+            }
+
+            if (summaryEl) {
+                const activeLabels = [];
+                if (edit) activeLabels.push('<strong class="text-emerald-300">Auto-Edit Video</strong>');
+                if (text) activeLabels.push('<strong class="text-amber-300">Text Hook</strong>');
+                if (sub) activeLabels.push('<strong class="text-sky-300">Phụ đề Vietsub</strong>');
+                const statusHtml = activeLabels.length > 0
+                    ? `Đang bật: ${activeLabels.join(' • ')}`
+                    : '<span class="text-slate-400">Đang tắt cả 3 tính năng (chỉ xuất kịch bản & Prompt gốc)</span>';
+                summaryEl.innerHTML = `
+                    <span>${statusHtml}</span>
+                    <button onclick="switchTab('editor')" class="text-violet-400 hover:text-violet-300 font-bold underline">Mở Xưởng Edit Video &rarr;</button>
+                `;
+            }
+        }
+
+        function refreshPromptDemoPreview() {
+            const imgEl = document.getElementById('prompt-demo-preview-img');
+            if (!imgEl) return;
+
+            const rawText = (document.getElementById('idea-input')?.value || '').trim();
+            const hookSample = rawText
+                ? rawText.split(/[.!?\n]/)[0].slice(0, 44).toUpperCase()
+                : 'ĐỪNG LƯỚT QUA NẾU BẠN MUỐN BIẾT BÍ MẬT NÀY!';
+            const subSample = rawText
+                ? rawText.slice(0, 82) + (rawText.length > 82 ? '...' : '')
+                : 'Từng bước thực hiện rõ nét, ánh sáng tự nhiên và lời thoại cuốn hút.';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 540;
+            canvas.height = 960;
+            const ctx = canvas.getContext('2d');
+
+            if (currentDemoBaseImage) {
+                ctx.drawImage(currentDemoBaseImage, 0, 0, 540, 960);
+                ctx.fillStyle = 'rgba(5, 8, 17, 0.25)';
+                ctx.fillRect(0, 0, 540, 960);
+            } else {
+                const grad = ctx.createLinearGradient(0, 0, 540, 960);
+                grad.addColorStop(0, appState.features.edit ? '#064E3B' : '#1E293B');
+                grad.addColorStop(0.5, '#0F172A');
+                grad.addColorStop(1, '#020617');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 540, 960);
+
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+                roundRectPath(ctx, 40, 250, 460, 410, 24);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#34D399';
+                ctx.font = 'bold 15px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('KHUNG HÌNH PROMPT 9:16', 270, 390);
+                ctx.font = '14px Inter, sans-serif';
+                ctx.fillStyle = '#E2E8F0';
+                wrapCanvasText(ctx, rawText || 'Nhập ý tưởng hoặc bấm "Tạo ảnh demo theo Prompt" để xem hình minh họa AI.', 270, 430, 390, 22, 5);
+                ctx.textAlign = 'left';
+            }
+
+            if (appState.features.edit) {
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.24)';
+                roundRectPath(ctx, 28, 72, 484, 44, 12);
+                ctx.fill();
+                ctx.strokeStyle = '#34D399';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#6EE7B7';
+                ctx.font = 'bold 13px Inter, sans-serif';
+                ctx.fillText('✂ AUTO-EDIT: 4 CẢNH CẮT NHỊP • MÀU ĐIỆN ẢNH • 1.15x', 42, 99);
+            }
+
+            if (appState.features.text) {
+                ctx.fillStyle = '#FACC15';
+                roundRectPath(ctx, 34, 136, 472, 82, 16);
+                ctx.fill();
+
+                ctx.fillStyle = '#090D16';
+                ctx.font = '900 20px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                wrapCanvasText(ctx, hookSample, 270, 170, 436, 26, 2);
+                ctx.textAlign = 'left';
+            }
+
+            if (appState.features.sub) {
+                ctx.fillStyle = 'rgba(2, 6, 23, 0.88)';
+                roundRectPath(ctx, 32, 725, 476, 120, 16);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#38BDF8';
+                ctx.font = 'bold 12px Inter, sans-serif';
+                ctx.fillText('CC VIETSUB TỰ ĐỘNG', 48, 750);
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 17px Inter, sans-serif';
+                wrapCanvasText(ctx, subSample, 48, 778, 444, 24, 3);
+            }
+
+            imgEl.src = canvas.toDataURL('image/png');
+        }
+
+        async function generatePromptDemoPreview() {
+            const btn = document.getElementById('btn-render-prompt-demo');
+            const rawText = (document.getElementById('idea-input')?.value || '').trim();
+            if (!rawText) {
+                showToast('Hãy nhập nội dung ý tưởng hoặc chọn 1 mẫu phía trên trước khi tạo ảnh demo!', 'info');
+                return;
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Đang vẽ demo...</span>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            try {
+                if (appState.apiKey) {
+                    const imageModels = ['gemini-3.1-flash-image', 'gemini-3.1-flash-lite-image'];
+                    for (const m of imageModels) {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(appState.apiKey)}`;
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{
+                                        text: `Photorealistic vertical 9:16 cinema still representing this video concept: ${rawText.slice(0, 220)}. Natural lighting, authentic context, high detail, no text overlay on image.`
+                                    }]
+                                }],
+                                generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+                            })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const part = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+                            if (part?.inlineData?.data) {
+                                const img = new Image();
+                                img.onload = () => {
+                                    currentDemoBaseImage = img;
+                                    refreshPromptDemoPreview();
+                                };
+                                img.src = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+                                showToast('Đã tạo ảnh demo 9:16 từ Prompt thành công!', 'success');
+                                return;
+                            }
+                        }
+                    }
+                }
+                currentDemoBaseImage = null;
+                refreshPromptDemoPreview();
+                showToast('Đã cập nhật khung ảnh demo 9:16 theo Prompt & các công tắc đang bật!', 'info');
+            } catch (e) {
+                refreshPromptDemoPreview();
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i data-lucide="image" class="w-3.5 h-3.5"></i><span>Tạo ảnh demo theo Prompt</span>`;
+                    if (window.lucide) lucide.createIcons();
+                }
+            }
+        }
+
+        // =========================================================================
+        // 6. XƯỞNG TẠO 3 KỊCH BẢN ĐA GÓC CẠNH & 4–6 PHÂN CẢNH
+        // =========================================================================
+        function applyHowToPromptTemplate(idx) {
+            const input = document.getElementById('idea-input');
+            if (!input || !HOWTO_PROMPT_TEMPLATES[idx]) return;
+            input.value = HOWTO_PROMPT_TEMPLATES[idx];
+            refreshPromptDemoPreview();
+            showToast('Đã nạp mẫu Prompt hướng dẫn quy trình chuẩn 5 lớp!', 'success');
+        }
+
+        function setDuration(dur, scenes) {
+            appState.selectedDuration = dur;
+            appState.selectedScenes = scenes;
+            [20, 25, 30, 45].forEach(d => {
+                const btn = document.getElementById(`dur-btn-${d}`);
+                if (!btn) return;
+                btn.className = (d === dur)
+                    ? 'px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition'
+                    : 'px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition';
+            });
+        }
+
+        function clearWorkshopInput() {
+            document.getElementById('idea-input').value = '';
+            currentDemoBaseImage = null;
+            refreshPromptDemoPreview();
+        }
+
+        async function generateThreeActionPrompts() {
+            const rawIdea = (document.getElementById('idea-input')?.value || '').trim();
+            if (!rawIdea) {
+                showToast('Vui lòng nhập ý tưởng hoặc chọn 1 mẫu trước khi tạo kịch bản!', 'error');
+                return;
+            }
+
+            const duration = appState.selectedDuration || 25;
+            const sceneCount = appState.selectedScenes || 4;
+            const btn = document.getElementById('btn-generate-prompts');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Đang triển khai 3 kịch bản (${sceneCount} cảnh/video)...</span>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            let optionsData = null;
+            try {
+                if (appState.apiKey) {
+                    const prompt = `Bạn là đạo diễn hình ảnh & biên kịch video ngắn TikTok/Reels.
+Từ ý tưởng: "${rawIdea}"
+Hãy tạo ĐÚNG 3 phương án kịch bản theo 3 góc độ khác nhau, thời lượng ${duration} giây, chia thành ĐÚNG ${sceneCount} phân cảnh liên hoàn (tức ít nhất ${sceneCount - 1} lần chuyển cảnh CUT TO rõ rệt).
+Yêu cầu:
+- Lời thoại tiếng Việt ("fullDialogue") phải dày dặn, tự nhiên, giàu chi tiết thực tế từ 110–170 từ.
+- Mỗi cảnh trong "scenes" phải có: "time", "cameraCut", "viAction" (mô tả hành động + lời thoại tiếng Việt), "flowPrompt" (câu lệnh tiếng Anh chi tiết cho Google Flow/Veo/Sora mô tả bối cảnh thật, ánh sáng, chuyển động, không chữ trên hình, tỷ lệ 9:16).
+Trả về JSON array gồm đúng 3 object:
+[{
+  "angleBadge": "Góc độ 1: ...",
+  "title": "Tiêu đề phương án",
+  "hookText": "TEXT HOOK IN HOA 5-9 TỪ",
+  "deepAnalysis": "Phân tích góc cạnh khai thác & lý do giữ chân",
+  "fullDialogue": "Lời thoại tiếng Việt đầy đủ 110-170 từ",
+  "scenes": [{ "time": "00:00 - 00:06", "cameraCut": "MỞ CẢNH • Trung cảnh", "viAction": "...", "flowPrompt": "..." }]
+}]`;
+                    const parsed = await callGeminiJSON(prompt);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        optionsData = parsed.slice(0, 3);
+                    }
+                }
+            } catch (err) {
+                showToast(`Dùng bộ kịch bản cục bộ (${err.message})`, 'info');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i><span>Tạo 3 Kịch Bản Đa Góc Cạnh & Ảnh Demo 9:16</span>`;
+                    if (window.lucide) lucide.createIcons();
+                }
+            }
+
+            if (!optionsData) {
+                optionsData = buildLocalFallbackOptions(rawIdea, duration, sceneCount);
+            }
+
+            appState.currentOptions = optionsData;
+            renderThreeOptionsGrid();
+            document.getElementById('results-section').classList.remove('hidden');
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function buildLocalFallbackOptions(rawIdea, duration, sceneCount) {
+            const cleanTopic = rawIdea.replace(/\s+/g, ' ').slice(0, 120);
+            const angles = [
+                {
+                    badge: 'Góc độ 1: Cận cảnh Quy trình & Trực quan từng bước',
+                    title: `Trực quan từng bước: ${cleanTopic.slice(0, 50)}`,
+                    hook: 'LÀM ĐÚNG TỪNG BƯỚC NÀY SẼ KHÁC HOÀN TOÀN!',
+                    analysis: 'Mở đầu bằng hình ảnh cận cảnh sắc nét, chuyển góc máy liên tục qua từng thao tác để giữ người xem theo dõi đến thành phẩm cuối.'
+                },
+                {
+                    badge: 'Góc độ 2: Hậu trường chân thật & Lỗi sai cần tránh',
+                    title: `Sự thật hậu trường: ${cleanTopic.slice(0, 50)}`,
+                    hook: '90% NGƯỜI MỚI ĐỀU BỎ QUA CHI TIẾT NÀY!',
+                    analysis: 'So sánh trực diện điểm khác biệt giữa cách làm vội vàng và cách xử lý tỉ mỉ giúp video có chiều sâu và độ tin cậy cao.'
+                },
+                {
+                    badge: 'Góc độ 3: Câu chuyện đời thường & Cảm xúc trải nghiệm',
+                    title: `Lát cắt đời thực: ${cleanTopic.slice(0, 50)}`,
+                    hook: 'NHÌN KỸ KHOẢNH KHẮC NÀY BẠN SẼ HIỂU NGAY!',
+                    analysis: 'Đặt tình huống vào không gian sinh hoạt tự nhiên với lời thoại gần gũi, tạo sự đồng cảm và tỷ lệ chia sẻ cao.'
+                }
+            ];
+
+            const stepSec = Math.floor(duration / sceneCount);
+            const cuts = [
+                'MỞ CẢNH • Trung cảnh không gian & ánh sáng tự nhiên',
+                'CUT TO • Cận cảnh thao tác tay & vật thể chính (Close-up)',
+                'CUT TO • Góc nghiêng phản ứng & diễn biến tiếp theo',
+                'CUT TO • Đặc tả chi tiết mấu chốt (Macro Detail)',
+                'CUT TO • Toàn cảnh kết quả hoàn thiện (Wide Resolution)',
+                'CUT TO • Góc máy nhấn mạnh thông điệp cuối'
+            ];
+
+            return angles.map(a => {
+                const scenes = Array.from({ length: sceneCount }).map((_, idx) => {
+                    const s = idx * stepSec;
+                    const e = idx === sceneCount - 1 ? duration : (idx + 1) * stepSec;
+                    return {
+                        time: `00:${String(s).padStart(2, '0')} - 00:${String(e).padStart(2, '0')}`,
+                        cameraCut: cuts[idx % cuts.length],
+                        viAction: `Cảnh ${idx + 1}: Triển khai chi tiết "${cleanTopic.slice(0, 70)}" — nhân vật thao tác dứt khoát dưới ánh sáng tự nhiên, lời thoại dẫn dắt rõ ràng mạch lạc.`,
+                        flowPrompt: `Photorealistic 9:16 vertical cinematic shot, scene ${idx + 1} of ${sceneCount}, ${cuts[idx % cuts.length]}, warm natural lighting, authentic detailed action for "${cleanTopic.slice(0, 80)}", 35mm lens, shallow depth of field, no text overlay.`
+                    };
+                });
+
+                return {
+                    angleBadge: a.badge,
+                    title: a.title,
+                    hookText: a.hook,
+                    deepAnalysis: a.analysis,
+                    fullDialogue: `Ngay từ giây đầu tiên khi bắt tay vào "${cleanTopic.slice(0, 60)}", điều quan trọng nhất chính là sự chỉn chu trong từng chi tiết nhỏ. Nhiều người thường làm vội qua bước chuẩn bị nên kết quả chưa được như ý. Khi quan sát kỹ ở góc quay cận cảnh, từng chuyển động và ánh sáng đều tạo nên sự khác biệt rõ rệt. Hãy thực hiện chậm rãi theo đúng trình tự từng bước một, bạn sẽ thấy thành phẩm cuối cùng hoàn toàn xứng đáng với công sức bỏ ra!`,
+                    scenes
+                };
+            });
+        }
+
+        function renderThreeOptionsGrid() {
+            const grid = document.getElementById('three-options-grid');
+            if (!grid) return;
+
+            grid.innerHTML = appState.currentOptions.map((opt, idx) => `
+                <div class="rounded-2xl bg-[#0D1322] border border-slate-800 p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xl">
+                    <div class="space-y-3">
+                        <span class="inline-block px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-extrabold text-emerald-300">${escapeHtml(opt.angleBadge)}</span>
+                        <h4 class="text-sm sm:text-base font-extrabold text-white">${escapeHtml(opt.title)}</h4>
+                        <p class="text-xs text-slate-300">${escapeHtml(opt.deepAnalysis)}</p>
+
+                        <!-- Khung lời thoại tiếng Việt -->
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[11px] font-bold text-sky-300">Lời thoại tiếng Việt (Vietsub):</span>
+                                <button onclick="sendDialogueToStudio(${idx})" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 underline">Đưa sang Edit Video &rarr;</button>
+                            </div>
+                            <p class="text-xs text-slate-200 leading-relaxed">${escapeHtml(opt.fullDialogue)}</p>
+                        </div>
+
+                        <!-- Danh sách 4–6 phân cảnh chuyển tiếp -->
+                        <div class="space-y-2">
+                            <div class="text-[11px] font-extrabold text-amber-300">Phân cảnh chuyển tiếp (${opt.scenes.length} cảnh • ${opt.scenes.length - 1} lần chuyển cảnh):</div>
+                            ${opt.scenes.map((sc, sIdx) => `
+                                <div class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800/90 space-y-1.5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[10px] font-black text-emerald-300">${escapeHtml(sc.time)} • ${escapeHtml(sc.cameraCut)}</span>
+                                        <button onclick="copyScenePrompt(${idx}, ${sIdx})" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-200">Copy Prompt</button>
+                                    </div>
+                                    <p class="text-[11px] text-slate-300">${escapeHtml(sc.viAction)}</p>
+                                    <p class="text-[10px] font-mono text-slate-400 bg-black/40 p-1.5 rounded">${escapeHtml(sc.flowPrompt)}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-800">
+                        <button onclick="saveOptionToVault(${idx})" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-amber-300">
+                            Lưu vào Kho
+                        </button>
+                        <button onclick="sendDialogueToStudio(${idx})" class="py-2.5 px-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-extrabold text-white">
+                            Mở Edit & Sub
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyScenePrompt(optIdx, sceneIdx) {
+            const sc = appState.currentOptions[optIdx]?.scenes?.[sceneIdx];
+            if (sc) copyTextSafe(sc.flowPrompt, `Đã sao chép Prompt Cảnh ${sceneIdx + 1} để dán vào Google Flow!`);
+        }
+
+        function saveOptionToVault(optIdx) {
+            const opt = appState.currentOptions[optIdx];
+            if (!opt) return;
+            appState.savedPrompts.unshift({
+                id: 'vault_' + Date.now(),
+                title: opt.title,
+                hookText: opt.hookText,
+                fullDialogue: opt.fullDialogue,
+                scenes: opt.scenes,
+                createdAt: new Date().toLocaleDateString('vi-VN')
+            });
+            saveToLocalStorage();
+            renderSavedPrompts();
+            showToast('Đã lưu kịch bản vào Kho Kịch Bản!', 'success');
+        }
+
+        function sendDialogueToStudio(optIdx) {
+            const opt = appState.currentOptions[optIdx];
+            if (!opt) return;
+            document.getElementById('studio-hook-title').value = appState.features.text ? (opt.hookText || opt.title.toUpperCase()) : '';
+            document.getElementById('studio-script-input').value = opt.fullDialogue;
+            document.getElementById('enable-subtitles').checked = !!appState.features.sub;
+            switchTab('editor');
+            renderStudioPreview();
+            showToast('Đã đồng bộ lời thoại & cấu hình sang Xưởng Edit Video!', 'success');
+        }
+
+        // =========================================================================
+        // 7. XƯỞNG TỰ ĐỘNG EDIT VIDEO & CHÈN VIETSUB (TAB 2)
+        // =========================================================================
+        let studioClipUrls = [];
+        let studioAnimId = null;
+
+        function handleStudioVideoUpload(event) {
+            const files = Array.from(event.target.files || []);
+            if (!files.length) return;
+            studioClipUrls.forEach(u => URL.revokeObjectURL(u.url));
+            studioClipUrls = files.map(f => ({ name: f.name, url: URL.createObjectURL(f) }));
+
+            const listEl = document.getElementById('studio-clips-list');
+            if (listEl) {
+                listEl.innerHTML = studioClipUrls.map((c, i) => `<div>Clip ${i + 1}: <strong class="text-emerald-300">${escapeHtml(c.name)}</strong></div>`).join('');
+            }
+            showToast(`Đã nạp ${studioClipUrls.length} clip video sẵn sàng Edit!`, 'success');
+            autoBuildAndPlayStudio();
+        }
+
+        function renderStudioPreview(subtitleLine = '') {
+            const canvas = document.getElementById('studio-canvas');
+            const vid = document.getElementById('studio-hidden-video');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            if (vid && vid.readyState >= 2 && !vid.paused) {
+                const vw = vid.videoWidth || 540;
+                const vh = vid.videoHeight || 960;
+                const scale = Math.max(540 / vw, 960 / vh);
+                const dw = vw * scale;
+                const dh = vh * scale;
+                ctx.drawImage(vid, (540 - dw) / 2, (960 - dh) / 2, dw, dh);
+            } else {
+                const grad = ctx.createLinearGradient(0, 0, 540, 960);
+                grad.addColorStop(0, '#0F172A');
+                grad.addColorStop(1, '#020617');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 540, 960);
+
+                ctx.fillStyle = '#94A3B8';
+                ctx.font = 'bold 16px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('KHUNG XEM TRƯỚC VIDEO 9:16', 270, 450);
+                ctx.font = '13px Inter, sans-serif';
+                ctx.fillText('Tải lên clip từ Google Flow để ghép cảnh & xuất file', 270, 480);
+                ctx.textAlign = 'left';
+            }
+
+            const hookTitle = (document.getElementById('studio-hook-title')?.value || '').trim();
+            if (hookTitle) {
+                ctx.fillStyle = '#FACC15';
+                roundRectPath(ctx, 32, 75, 476, 82, 16);
+                ctx.fill();
+                ctx.fillStyle = '#090D16';
+                ctx.font = '900 20px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                wrapCanvasText(ctx, hookTitle.toUpperCase(), 270, 108, 440, 26, 2);
+                ctx.textAlign = 'left';
+            }
+
+            const subEnabled = document.getElementById('enable-subtitles')?.checked;
+            const scriptText = (document.getElementById('studio-script-input')?.value || '').trim();
+            const activeSub = subtitleLine || scriptText.split(/[.!?]/)[0] || '';
+            if (subEnabled && activeSub) {
+                ctx.fillStyle = 'rgba(2, 6, 23, 0.85)';
+                roundRectPath(ctx, 32, 740, 476, 110, 16);
+                ctx.fill();
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 18px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                wrapCanvasText(ctx, activeSub.trim(), 270, 782, 440, 26, 3);
+                ctx.textAlign = 'left';
+            }
+        }
+
+        function autoBuildAndPlayStudio() {
+            const vid = document.getElementById('studio-hidden-video');
+            const scriptText = (document.getElementById('studio-script-input')?.value || '').trim();
+            const lines = scriptText.split(/[.!?\n]+/).map(s => s.trim()).filter(Boolean);
+            let clipIndex = 0;
+
+            if (studioAnimId) cancelAnimationFrame(studioAnimId);
+
+            if (studioClipUrls.length > 0 && vid) {
+                vid.src = studioClipUrls[0].url;
+                vid.playbackRate = appState.features.edit ? 1.15 : 1.0;
+                vid.play().catch(() => {});
+                vid.onended = () => {
+                    clipIndex = (clipIndex + 1) % studioClipUrls.length;
+                    vid.src = studioClipUrls[clipIndex].url;
+                    vid.play().catch(() => {});
+                };
+            }
+
+            const startTs = performance.now();
+            function loop(now) {
+                const elapsedSec = (now - startTs) / 1000;
+                const lineIdx = lines.length > 0 ? Math.floor(elapsedSec / 2.8) % lines.length : 0;
+                renderStudioPreview(lines[lineIdx] || '');
+                studioAnimId = requestAnimationFrame(loop);
+            }
+            studioAnimId = requestAnimationFrame(loop);
+        }
+
+        function exportFinalStudioVideo() {
+            const canvas = document.getElementById('studio-canvas');
+            const statusEl = document.getElementById('studio-export-status');
+            if (!canvas || !canvas.captureStream) {
+                showToast('Trình duyệt không hỗ trợ xuất video trực tiếp.', 'error');
+                return;
+            }
+            autoBuildAndPlayStudio();
+            const stream = canvas.captureStream(30);
+            const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const chunks = [];
+            recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `turbo_studio_9x16_${Date.now()}.webm`;
+                a.click();
+                if (statusEl) statusEl.textContent = 'Đã xuất xong file video thành phẩm 9:16!';
+                showToast('Đã tải xuống video thành phẩm 9:16!', 'success');
+            };
+            if (statusEl) statusEl.textContent = 'Đang ghi xuất video thành phẩm (8 giây)...';
+            recorder.start();
+            setTimeout(() => recorder.stop(), 8000);
+        }
+
+        // =========================================================================
+        // 8. KHO KỊCH BẢN (TAB 3) & HÀM TIỆN ÍCH
+        // =========================================================================
+        function renderSavedPrompts() {
+            const badge = document.getElementById('vault-count-badge');
+            const grid = document.getElementById('vault-grid');
+            if (badge) badge.textContent = appState.savedPrompts.length;
+            if (!grid) return;
+
+            if (!appState.savedPrompts.length) {
+                grid.innerHTML = `<div class="col-span-full p-8 text-center text-xs text-slate-400 border border-dashed border-slate-800 rounded-2xl">Chưa có kịch bản nào được lưu. Hãy tạo kịch bản ở Tab 1 và bấm "Lưu vào Kho".</div>`;
+                return;
+            }
+
+            grid.innerHTML = appState.savedPrompts.map(item => `
+                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="text-[10px] text-slate-400 mb-1">Lưu ngày ${escapeHtml(item.createdAt || '')}</div>
+                        <h4 class="text-sm font-extrabold text-white mb-2">${escapeHtml(item.title)}</h4>
+                        <p class="text-xs text-slate-300 line-clamp-3">${escapeHtml(item.fullDialogue)}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                        <button onclick="deleteVaultItem('${item.id}')" class="text-[11px] font-bold text-rose-400 hover:text-rose-300">Xóa</button>
+                        <button onclick="loadVaultItem('${item.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">Mở lại kịch bản</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteVaultItem(id) {
+            appState.savedPrompts = appState.savedPrompts.filter(x => x.id !== id);
+            saveToLocalStorage();
+            renderSavedPrompts();
+        }
+
+        function loadVaultItem(id) {
+            const item = appState.savedPrompts.find(x => x.id === id);
+            if (!item) return;
+            appState.currentOptions = [{
+                angleBadge: 'Kịch bản đã lưu',
+                title: item.title,
+                hookText: item.hookText,
+                deepAnalysis: 'Khôi phục từ Kho Kịch Bản',
+                fullDialogue: item.fullDialogue,
+                scenes: item.scenes || []
+            }];
+            switchTab('ideas');
+            renderThreeOptionsGrid();
+            document.getElementById('results-section').classList.remove('hidden');
+        }
+
+        function roundRectPath(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
+            const words = String(text || '').split(' ');
+            let line = '';
+            let lineCount = 0;
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                    lineCount++;
+                    if (lineCount >= maxLines) return;
+                } else {
+                    line = testLine;
+                }
+            }
+            if (lineCount < maxLines) ctx.fillText(line.trim(), x, y);
+        }
+
+        function copyTextSafe(text, successMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast(successMsg || 'Đã sao chép!', 'success');
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>
